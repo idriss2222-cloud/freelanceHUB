@@ -17,6 +17,9 @@
         <a class="navbar-brand fw-bold" href="{{ path('app_home') }}">Freelance<span>HUB</span></a>
         <div class="d-flex align-items-center gap-2 ms-auto">
             {% if app.user %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="btn btn-outline-light btn-sm" href="{{ path('app_admin') }}">Administration</a>
+                {% endif %}
                 <a class="btn btn-outline-light btn-sm" href="{{ path('app_project_index') }}">Projets</a>
                 <a class="btn btn-outline-light btn-sm" href="{{ path('app_freelancer_index') }}">Freelancers</a>
                 <span class="navbar-text d-none d-sm-inline">{{ app.user.fullName }}</span>

@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['email'], message: 'Cette adresse courriel est déjà utilisée.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_CLIENT = 'ROLE_CLIENT';
     public const ROLE_FREELANCER = 'ROLE_FREELANCER';
 
@@ -98,6 +99,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getAccountType(): string
     {
+        if (in_array(self::ROLE_ADMIN, $this->roles, true)) {
+            return self::ROLE_ADMIN;
+        }
+
         return in_array(self::ROLE_CLIENT, $this->roles, true)
             ? self::ROLE_CLIENT
             : self::ROLE_FREELANCER;

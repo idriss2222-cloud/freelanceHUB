@@ -27,7 +27,7 @@ class ProfileController extends AbstractController
             throw $this->createNotFoundException('Profil freelancer introuvable.');
         }
 
-        return $this->render('profile/show.html.twig', [
+        return $this->render('Projets/show.html.twig', [
             'profile' => $profile,
         ]);
     }

@@ -22,7 +22,8 @@ security:
                 password_parameter: password
                 enable_csrf: true
                 csrf_token_id: authenticate
-                default_target_path: app_profile
+                default_target_path: app_project_index
+                always_use_default_target_path: true
             logout:
                 path: /deconnexion
                 target: app_login

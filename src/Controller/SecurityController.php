@@ -18,6 +18,10 @@ class SecurityController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function home(): RedirectResponse
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_admin');
+        }
+
         return $this->redirectToRoute($this->getUser() ? 'app_profile' : 'app_login');
     }
 
