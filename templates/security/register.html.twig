@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <div class="form-layout">
+        <div class="page-heading">
+            <p class="eyebrow">Rejoignez la plateforme</p>
+            <h1>Créer votre compte</h1>
+            <p class="text-secondary">Choisissez votre espace et complétez les informations de départ de votre profil.</p>
+        </div>
+
+        <section class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                {{ form_start(registrationForm) }}
+                    {{ form_errors(registrationForm) }}
+                    {{ form_row(registrationForm.fullName) }}
+                    {{ form_row(registrationForm.email) }}
+                    {{ form_row(registrationForm.accountType) }}
+                    {{ form_row(registrationForm.company) }}
+                    {{ form_row(registrationForm.plainPassword.first) }}
+                    {{ form_row(registrationForm.plainPassword.second) }}
+                    <button class="btn btn-primary btn-lg w-100 mt-3" type="submit">Créer mon compte</button>
+                {{ form_end(registrationForm) }}
+                <p class="text-secondary text-center mt-4 mb-0">Vous avez déjà un compte ?
+                    <a href="{{ path('app_login') }}">Connectez-vous</a>
+                </p>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <div class="profile-layout">
+        <header class="page-heading">
+            <p class="eyebrow">Espace personnel</p>
+            <h1>Mon profil</h1>
+            <p class="text-secondary">Mettez à jour vos informations et les compétences affichées sur votre profil.</p>
+        </header>
+
+        <section class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="profile-summary mb-4">
+                    <div class="avatar" aria-hidden="true">{{ app.user.fullName|first|upper }}</div>
+                    <div>
+                        <h2 class="h5 mb-1">{{ app.user.fullName }}</h2>
+                        <span class="badge rounded-pill text-bg-light">
+                            {{ is_granted('ROLE_CLIENT') ? 'Client' : 'Freelancer' }}
+                        </span>
+                    </div>
+                </div>
+
+                {{ form_start(profileForm) }}
+                    {{ form_errors(profileForm) }}
+                    {{ form_row(profileForm.fullName) }}
+                    {{ form_row(profileForm.email) }}
+                    {{ form_row(profileForm.company) }}
+                    {{ form_row(profileForm.bio) }}
+                    {{ form_row(profileForm.skillsText) }}
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-4">
+                        <p class="small text-secondary mb-0">Votre compte : {{ app.user.email }}</p>
+                        <button class="btn btn-primary btn-lg" type="submit">Enregistrer le profil</button>
+                    </div>
+                {{ form_end(profileForm) }}
+            </div>
+        </section>
+
+        {% if app.user.skills|length > 0 %}
+            <section class="skills-preview" aria-labelledby="skills-heading">
+                <h2 class="h5" id="skills-heading">Compétences enregistrées</h2>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for skill in app.user.skills %}
+                        <span class="badge skill-chip">{{ skill.name }}</span>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </div>
+{% endblock %}

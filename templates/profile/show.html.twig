@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ profile.fullName }} · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <div class="detail-layout">
+        <p><a href="{{ path('app_freelancer_index') }}" class="text-decoration-none">← Retour aux freelancers</a></p>
+        <article class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="avatar avatar-large" aria-hidden="true">{{ profile.fullName|first|upper }}</div>
+                    <div>
+                        <p class="eyebrow mb-1">Freelancer</p>
+                        <h1 class="h2 mb-1">{{ profile.fullName }}</h1>
+                        {% if profile.company %}<p class="text-secondary mb-0">{{ profile.company }}</p>{% endif %}
+                    </div>
+                </div>
+                {% if profile.bio %}
+                    <h2 class="h5">À propos</h2>
+                    <div class="project-description mb-4">{{ profile.bio|nl2br }}</div>
+                {% endif %}
+                <h2 class="h5">Compétences</h2>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for skill in profile.skills %}
+                        <span class="badge skill-chip">{{ skill.name }}</span>
+                    {% else %}
+                        <span class="text-secondary">Aucune compétence renseignée.</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+    </div>
+{% endblock %}

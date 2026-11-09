@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Freelancers · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <header class="listing-heading">
+        <p class="eyebrow">Talents de la plateforme</p>
+        <h1>Rechercher un freelancer</h1>
+        <p class="text-secondary">Trouvez un profil à partir de son nom, de sa présentation ou de ses compétences.</p>
+    </header>
+
+    <form class="card border-0 shadow-sm filter-card mb-4" method="get" action="{{ path('app_freelancer_index') }}">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label" for="profile-q">Nom ou mots-clés</label>
+                    <input class="form-control" id="profile-q" name="q" value="{{ filters.q }}" placeholder="Nom, entreprise, présentation…">
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label" for="profile-skill">Compétence</label>
+                    <input class="form-control" id="profile-skill" name="skill" value="{{ filters.skill }}" placeholder="Ex. Symfony">
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button class="btn btn-primary flex-grow-1" type="submit">Rechercher</button>
+                    <a class="btn btn-outline-secondary" href="{{ path('app_freelancer_index') }}">Effacer</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <h2 class="h5 mb-3">{{ profiles|length }} profil{{ profiles|length == 1 ? '' : 's' }}</h2>
+    <div class="row g-3">
+        {% for profile in profiles %}
+            <div class="col-12 col-lg-6">
+                <article class="card profile-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="avatar" aria-hidden="true">{{ profile.fullName|first|upper }}</div>
+                            <div>
+                                <h3 class="h5 mb-1">{{ profile.fullName }}</h3>
+                                {% if profile.company %}<p class="text-secondary small mb-0">{{ profile.company }}</p>{% endif %}
+                            </div>
+                        </div>
+                        {% if profile.bio %}<p class="text-secondary">{{ profile.bio|slice(0, 157) }}{% if profile.bio|length > 157 %}…{% endif %}</p>{% endif %}
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            {% for skill in profile.skills %}
+                                <span class="badge skill-chip">{{ skill.name }}</span>
+                            {% else %}
+                                <span class="small text-secondary">Aucune compétence renseignée</span>
+                            {% endfor %}
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ path('app_profile_show', {id: profile.id}) }}">Voir le profil</a>
+                    </div>
+                </article>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state card border-0 shadow-sm text-center p-5">
+                    <h3 class="h5">Aucun profil trouvé</h3>
+                    <p class="text-secondary mb-0">Essayez d’autres mots-clés ou une autre compétence.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

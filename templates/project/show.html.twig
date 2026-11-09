@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ project.title }} · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <div class="detail-layout">
+        <p><a href="{{ path('app_project_index') }}" class="text-decoration-none">← Retour aux projets</a></p>
+        <article class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+                    <span class="badge text-bg-light">{{ project.category }}</span>
+                    <span class="badge status-{{ project.status }}">{{ project.statusLabel }}</span>
+                </div>
+                <h1 class="display-6 fw-bold mb-4">{{ project.title }}</h1>
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-4"><div class="detail-stat"><span>Budget</span><strong>{{ project.budget|number_format(2, ',', ' ') }}</strong></div></div>
+                    <div class="col-sm-4"><div class="detail-stat"><span>Date limite</span><strong>{{ project.deadline|date('d/m/Y') }}</strong></div></div>
+                    <div class="col-sm-4"><div class="detail-stat"><span>Client</span><strong>{{ project.client.fullName }}</strong></div></div>
+                </div>
+                <h2 class="h5">Description</h2>
+                <div class="project-description">{{ project.description|nl2br }}</div>
+                <p class="small text-secondary mt-4 mb-0">Publié le {{ project.createdAt|date('d/m/Y') }}</p>
+
+                {% if is_granted('ROLE_CLIENT') and project.client.id == app.user.id %}
+                    <hr class="my-4">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-primary" href="{{ path('app_project_edit', {id: project.id}) }}">Modifier</a>
+                        <form method="post" action="{{ path('app_project_delete', {id: project.id}) }}" onsubmit="return confirm('Supprimer ce projet ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
+                            <button class="btn btn-outline-danger" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+{% endblock %}

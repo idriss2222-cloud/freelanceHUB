@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projets · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <header class="listing-heading d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+        <div>
+            <p class="eyebrow">Missions et collaborations</p>
+            <h1>Explorer les projets</h1>
+            <p class="text-secondary mb-0">Recherchez par mots-clés, catégorie, statut ou budget.</p>
+        </div>
+        {% if is_granted('ROLE_CLIENT') %}
+            <a class="btn btn-primary" href="{{ path('app_project_new') }}">Publier un projet</a>
+        {% endif %}
+    </header>
+
+    <form class="card border-0 shadow-sm filter-card mb-4" method="get" action="{{ path('app_project_index') }}">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-12 col-lg-4">
+                    <label class="form-label" for="project-q">Mots-clés</label>
+                    <input class="form-control" id="project-q" name="q" value="{{ filters.q }}" placeholder="Titre, description…">
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2">
+                    <label class="form-label" for="project-category">Catégorie</label>
+                    <input class="form-control" id="project-category" name="category" value="{{ filters.category }}" placeholder="Ex. design">
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2">
+                    <label class="form-label" for="project-status">Statut</label>
+                    <select class="form-select" id="project-status" name="status">
+                        <option value="">Tous les statuts</option>
+                        {% for label, value in statuses %}
+                            <option value="{{ value }}" {{ filters.status == value ? 'selected' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 col-lg-1">
+                    <label class="form-label" for="budget-min">Budget min.</label>
+                    <input class="form-control" id="budget-min" name="budget_min" type="number" min="0" step="0.01" value="{{ filters.budget_min }}">
+                </div>
+                <div class="col-6 col-lg-1">
+                    <label class="form-label" for="budget-max">Budget max.</label>
+                    <input class="form-control" id="budget-max" name="budget_max" type="number" min="0" step="0.01" value="{{ filters.budget_max }}">
+                </div>
+                <div class="col-12 col-lg-2 d-flex gap-2">
+                    <button class="btn btn-primary flex-grow-1" type="submit">Rechercher</button>
+                    <a class="btn btn-outline-secondary" href="{{ path('app_project_index') }}">Effacer</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">{{ projects|length }} projet{{ projects|length == 1 ? '' : 's' }}</h2>
+    </div>
+
+    <div class="row g-3">
+        {% for project in projects %}
+            <div class="col-12 col-lg-6">
+                <article class="card project-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <span class="badge text-bg-light">{{ project.category }}</span>
+                            <span class="badge status-{{ project.status }}">{{ project.statusLabel }}</span>
+                        </div>
+                        <h3 class="h5"><a class="stretched-link text-decoration-none project-title" href="{{ path('app_project_show', {id: project.id}) }}">{{ project.title }}</a></h3>
+                        <p class="text-secondary project-excerpt">{{ project.description|striptags|slice(0, 177) }}{% if project.description|length > 177 %}…{% endif %}</p>
+                        <div class="project-meta d-flex flex-wrap gap-3 small">
+                            <span><strong>Budget :</strong> {{ project.budget|number_format(2, ',', ' ') }}</span>
+                            <span><strong>Échéance :</strong> {{ project.deadline|date('d/m/Y') }}</span>
+                        </div>
+                        <p class="small text-secondary mt-3 mb-0">Publié par {{ project.client.fullName }}</p>
+                    </div>
+                </article>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state card border-0 shadow-sm text-center p-5">
+                    <h3 class="h5">Aucun projet trouvé</h3>
+                    <p class="text-secondary mb-0">Modifiez les filtres ou revenez plus tard pour voir de nouveaux projets.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

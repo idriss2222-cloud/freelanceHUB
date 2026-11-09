@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ isEditing ? 'Modifier le projet' : 'Publier un projet' }} · FreelanceHUB{% endblock %}
+
+{% block body %}
+    <div class="form-layout">
+        <header class="page-heading">
+            <p class="eyebrow">Espace client</p>
+            <h1>{{ isEditing ? 'Modifier le projet' : 'Publier un projet' }}</h1>
+            <p class="text-secondary">Présentez clairement la mission, le budget et la date limite.</p>
+        </header>
+
+        <section class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                {{ form_start(projectForm) }}
+                    {{ form_errors(projectForm) }}
+                    {{ form_row(projectForm.title) }}
+                    {{ form_row(projectForm.category) }}
+                    {{ form_row(projectForm.description) }}
+                    <div class="row g-3">
+                        <div class="col-md-6">{{ form_row(projectForm.budget) }}</div>
+                        <div class="col-md-6">{{ form_row(projectForm.deadline) }}</div>
+                    </div>
+                    {{ form_row(projectForm.status) }}
+                    <div class="d-flex justify-content-between gap-3 mt-4">
+                        <a class="btn btn-outline-secondary" href="{{ isEditing ? path('app_project_show', {id: project.id}) : path('app_project_index') }}">Annuler</a>
+                        <button class="btn btn-primary" type="submit">{{ isEditing ? 'Enregistrer les changements' : 'Publier le projet' }}</button>
+                    </div>
+                {{ form_end(projectForm) }}
+            </div>
+        </section>
+    </div>
+{% endblock %}
